@@ -1,4 +1,5 @@
 import 'package:family_mart/Store/Extras/approutes/route_name.dart';
+import 'package:family_mart/Store/Extras/approutes/routig_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -14,13 +15,13 @@ import '../../Navigation/bottom_navigation.dart';
 import '../Widgets/enchanced_search.dart';
 
 class GroceryHomePage extends StatelessWidget {
-  final ProductController productController = Get.find<ProductController>();
+  // final ProductController productController = Get.find<ProductController>();
   final CategoryController categoryController = Get.put(CategoryController());
   final ProfileController profileController = Get.put(ProfileController());
   final ScrollController _scrollController = ScrollController();
-  final SharedPreferencesService authService = Get.find<
-      SharedPreferencesService>();
-
+  final ProductController productController = Get.put(ProductController());
+  final SharedPreferencesService authService =
+      Get.find<SharedPreferencesService>();
 
   GroceryHomePage({super.key}) {
     _scrollController.addListener(_onScroll);
@@ -60,13 +61,19 @@ class GroceryHomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AnimatedWrapper(
-                            index: 2, child: _buildVegetablesBanner()),
+                          index: 2,
+                          child: _buildVegetablesBanner(),
+                        ),
                         const SizedBox(height: 24),
                         AnimatedWrapper(
-                            index: 3, child: _buildMostPopularCategory()),
+                          index: 3,
+                          child: _buildMostPopularCategory(),
+                        ),
                         const SizedBox(height: 24),
                         AnimatedWrapper(
-                            index: 4, child: _buildFeaturedProducts()),
+                          index: 4,
+                          child: _buildFeaturedProducts(),
+                        ),
                         _buildLoadMoreIndicator(),
                       ],
                     ),
@@ -97,17 +104,20 @@ class GroceryHomePage extends StatelessWidget {
               children: [
                 Text('FamilyMart', style: AppTextStyles.heading0),
                 Obx(() {
+                
                   return Row(
                     children: [
-                      const Icon(Icons.location_on,
-                          size: 16, color: AppColors.primary),
-                      authService.isLoggedIn ? Text(
-                          profileController.customer.value?.place ??
-                              'Not Available',
-                          style: AppTextStyles.body2.copyWith(color: AppColors
-                              .black)) : Text('Loading...',
-                          style: AppTextStyles.body2
-                              .copyWith(color: AppColors.black)),
+                      const Icon(
+                        Icons.location_on,
+                        size: 16,
+                        color: Colors.yellow,
+                      ),
+                      authService.isLoggedIn
+                          ? Text(
+                              profileController.customer.value?.place ??
+                                  'Not Available',
+                            )
+                          : Text('Select Location'),
                       const Icon(Icons.keyboard_arrow_down, size: 16),
                     ],
                   );
@@ -119,8 +129,10 @@ class GroceryHomePage extends StatelessWidget {
             onPressed: () {
               Get.toNamed(RouteName.notifications);
             },
-            icon:
-            const Icon(Icons.notifications_outlined, color: AppColors.grey),
+            icon: const Icon(
+              Icons.notifications_outlined,
+              color: AppColors.grey,
+            ),
           ),
         ],
       ),
@@ -189,7 +201,7 @@ class GroceryHomePage extends StatelessWidget {
 
   Widget _buildBannerContent() {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
       child: Row(
         children: [
           Expanded(
@@ -197,28 +209,40 @@ class GroceryHomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Get',
-                    style:
-                    AppTextStyles.body1.copyWith(color: AppColors.white)),
-                Text('VEGETABLES',
-                    style: AppTextStyles.heading2
-                        .copyWith(color: AppColors.white)),
-                Text('UPTO 50% OFF',
-                    style:
-                    AppTextStyles.caption.copyWith(color: AppColors.white)),
-                const SizedBox(height: 12),
-                Container(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
+                Text(
+                  'Get',
+                  style: AppTextStyles.body1.copyWith(color: AppColors.white),
+                ),
+                Text(
+                  'VEGETABLES',
+                  style: AppTextStyles.heading2.copyWith(
                     color: AppColors.white,
-                    borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Text(
-                    'ORDER NOW',
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
+                ),
+                Text(
+                  'UPTO 50% OFF',
+                  style: AppTextStyles.caption.copyWith(color: AppColors.white),
+                ),
+                const SizedBox(height: 12),
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(RouteName.category);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'ORDER NOW',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -232,8 +256,11 @@ class GroceryHomePage extends StatelessWidget {
               color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.shopping_basket,
-                size: 40, color: AppColors.white),
+            child: const Icon(
+              Icons.shopping_basket,
+              size: 40,
+              color: AppColors.white,
+            ),
           ),
         ],
       ),
@@ -250,8 +277,10 @@ class GroceryHomePage extends StatelessWidget {
           color: AppColors.red,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Text('5.00',
-            style: AppTextStyles.caption.copyWith(color: AppColors.white)),
+        child: Text(
+          '5.00',
+          style: AppTextStyles.caption.copyWith(color: AppColors.white),
+        ),
       ),
     );
   }
@@ -282,7 +311,7 @@ class GroceryHomePage extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     AppColors.primary,
-                    AppColors.primary.withOpacity(0.3)
+                    AppColors.primary.withOpacity(0.3),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(2),
@@ -300,8 +329,8 @@ class GroceryHomePage extends StatelessWidget {
             icon: Icon(icon, color: AppColors.primary, size: 20),
             onPressed: () {
               MainNavigationPageState.to.changeTab(1); // Go to Category tab
-
-            },),
+            },
+          ),
         ),
       ],
     );
@@ -310,7 +339,10 @@ class GroceryHomePage extends StatelessWidget {
   Widget _buildCategoryContent() {
     if (categoryController.isLoading.value) {
       return _buildSkeletonList(
-          height: 100, itemCount: 5, itemBuilder: _buildSkeletonCategoryItem);
+        height: 100,
+        itemCount: 5,
+        itemBuilder: _buildSkeletonCategoryItem,
+      );
     }
 
     if (categoryController.errorMessage.isNotEmpty) {
@@ -337,19 +369,20 @@ class GroceryHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSkeletonList({required double height,
+  Widget _buildSkeletonList({
+    required double height,
     required int itemCount,
-    required Widget Function() itemBuilder}) {
+    required Widget Function() itemBuilder,
+  }) {
     return SizedBox(
       height: height,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: itemCount,
-        itemBuilder: (context, index) =>
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: itemBuilder(),
-            ),
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: itemBuilder(),
+        ),
       ),
     );
   }
@@ -368,8 +401,10 @@ class GroceryHomePage extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, color: AppColors.grey, size: 24),
             const SizedBox(height: 8),
-            Text(message,
-                style: AppTextStyles.caption.copyWith(color: AppColors.grey)),
+            Text(
+              message,
+              style: AppTextStyles.caption.copyWith(color: AppColors.grey),
+            ),
           ],
         ),
       ),
@@ -383,11 +418,14 @@ class GroceryHomePage extends StatelessWidget {
       onTap: () {
         print(categoryName);
 
-        Get.toNamed(RouteName.productsBasedOnCategory, arguments: {
-          'id': id,
-          'name': categoryName.toString(),
-          'icon': Icons.eco_rounded,
-        });
+        Get.toNamed(
+          RouteName.productsBasedOnCategory,
+          arguments: {
+            'id': id,
+            'name': categoryName.toString(),
+            'icon': Icons.eco_rounded,
+          },
+        );
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300 + (index * 100)),
@@ -397,7 +435,7 @@ class GroceryHomePage extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               backgroundColor.withOpacity(0.15),
-              backgroundColor.withOpacity(0.05)
+              backgroundColor.withOpacity(0.05),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -461,7 +499,7 @@ class GroceryHomePage extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               Colors.white.withOpacity(0.3),
-              Colors.white.withOpacity(0.1)
+              Colors.white.withOpacity(0.1),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -485,10 +523,16 @@ class GroceryHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-                width: 80, height: 12, child: ColoredBox(color: Colors.grey)),
+              width: 80,
+              height: 12,
+              child: ColoredBox(color: Colors.grey),
+            ),
             SizedBox(height: 8),
             SizedBox(
-                width: 60, height: 8, child: ColoredBox(color: Colors.grey)),
+              width: 60,
+              height: 8,
+              child: ColoredBox(color: Colors.grey),
+            ),
           ],
         ),
       ),
@@ -541,7 +585,7 @@ class GroceryHomePage extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     AppColors.primary,
-                    AppColors.primary.withOpacity(0.3)
+                    AppColors.primary.withOpacity(0.3),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(2),
@@ -575,8 +619,9 @@ class GroceryHomePage extends StatelessWidget {
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
         ),
-        itemCount: productController.isLoading &&
-            productController.filteredProducts.isEmpty
+        itemCount:
+            productController.isLoading &&
+                productController.filteredProducts.isEmpty
             ? 6
             : productController.filteredProducts.length,
         itemBuilder: (context, index) {
@@ -601,9 +646,7 @@ class GroceryHomePage extends StatelessWidget {
         return const Padding(
           padding: EdgeInsets.all(16.0),
           child: Center(
-            child: SmallLoadingSpinner(
-              colors: [AppColors.primary],
-            ),
+            child: SmallLoadingSpinner(colors: [AppColors.primary]),
           ),
         );
       }
@@ -679,14 +722,16 @@ class GroceryHomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                    width: double.infinity,
-                    height: 16,
-                    child: ColoredBox(color: Colors.grey)),
+                  width: double.infinity,
+                  height: 16,
+                  child: ColoredBox(color: Colors.grey),
+                ),
                 SizedBox(height: 8),
                 SizedBox(
-                    width: 80,
-                    height: 12,
-                    child: ColoredBox(color: Colors.grey)),
+                  width: 80,
+                  height: 12,
+                  child: ColoredBox(color: Colors.grey),
+                ),
                 SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -695,14 +740,16 @@ class GroceryHomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                            width: 60,
-                            height: 16,
-                            child: ColoredBox(color: Colors.grey)),
+                          width: 60,
+                          height: 16,
+                          child: ColoredBox(color: Colors.grey),
+                        ),
                         SizedBox(height: 4),
                         SizedBox(
-                            width: 100,
-                            height: 12,
-                            child: ColoredBox(color: Colors.grey)),
+                          width: 100,
+                          height: 12,
+                          child: ColoredBox(color: Colors.grey),
+                        ),
                       ],
                     ),
                     CircleAvatar(radius: 15, backgroundColor: Colors.grey),
@@ -735,10 +782,7 @@ class GroceryHomePage extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildProductImage(product),
-            _buildProductInfo(product),
-          ],
+          children: [_buildProductImage(product), _buildProductInfo(product)],
         ),
       ),
     );
@@ -748,7 +792,7 @@ class GroceryHomePage extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          height: 140,
+          height: 100,
           width: double.infinity,
           decoration: const BoxDecoration(
             color: AppColors.white,
@@ -756,20 +800,24 @@ class GroceryHomePage extends StatelessWidget {
           ),
           child: product.imageUrl != null
               ? ClipRRect(
-            borderRadius:
-            const BorderRadius.vertical(top: Radius.circular(12)),
-            child: Image.network(
-              product.imageUrl,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) =>
-              const Icon(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(12),
+                  ),
+                  child: Image.network(
+                    product.imageUrl,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.shopping_basket,
+                      size: 40,
+                      color: AppColors.grey,
+                    ),
+                  ),
+                )
+              : const Icon(
                   Icons.shopping_basket,
                   size: 40,
-                  color: AppColors.grey),
-            ),
-          )
-              : const Icon(Icons.shopping_basket,
-              size: 40, color: AppColors.grey),
+                  color: AppColors.grey,
+                ),
         ),
         Positioned(
           top: 8,
@@ -796,7 +844,9 @@ class GroceryHomePage extends StatelessWidget {
             height: 40,
             width: 40,
             decoration: const BoxDecoration(
-                color: AppColors.white, shape: BoxShape.circle),
+              color: AppColors.white,
+              shape: BoxShape.circle,
+            ),
             child: IconButton(
               icon: const Icon(Icons.favorite_border, size: 22),
               onPressed: () {},
@@ -809,7 +859,7 @@ class GroceryHomePage extends StatelessWidget {
 
   Widget _buildProductInfo(dynamic product) {
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -836,12 +886,15 @@ class GroceryHomePage extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('₹${product.mrp.toStringAsFixed(2)}',
-                      style: AppTextStyles.price),
+                  Text(
+                    '₹${product.mrp.toStringAsFixed(2)}',
+                    style: AppTextStyles.price,
+                  ),
                   Text(
                     '${product.value}/${product.measurement}',
-                    style:
-                    AppTextStyles.caption.copyWith(color: AppColors.grey),
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.grey,
+                    ),
                   ),
                 ],
               ),

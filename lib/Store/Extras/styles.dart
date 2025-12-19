@@ -56,7 +56,7 @@ class AppTextStyles {
   );
 
   static TextStyle get body1 => GoogleFonts.openSans(
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: FontWeight.normal,
     color: AppColors.black,
   );

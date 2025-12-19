@@ -58,18 +58,19 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 child: Image.asset(
                   ImageUrls.logo,
+                  color: Colors.yellow[700],
                   fit: BoxFit.cover,
                 ),
               ),
               const SizedBox(height: 20),
               // App Name (optional)
-              Text(
-                'Hyper Mart', // Replace with your app name
-                style: AppTextStyles.heading1.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              // Text(
+              //   'Hyper Mart', // Replace with your app name
+              //   style: AppTextStyles.heading1.copyWith(
+              //     color: AppColors.primary,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
               const SizedBox(height: 10),
               // Tagline (optional)
               Text(

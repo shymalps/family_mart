@@ -9,8 +9,10 @@ import '../services/update_profile_service.dart';
 
 class ProfileController extends GetxController {
   final ProfileService _profileService = Get.find<ProfileService>();
-  final ProfileServiceUpdate _profileServiceUpdate = Get.find<ProfileServiceUpdate>();
-  final SharedPreferencesService _prefsService = Get.find<SharedPreferencesService>();
+  final ProfileServiceUpdate _profileServiceUpdate =
+      Get.find<ProfileServiceUpdate>();
+  final SharedPreferencesService _prefsService =
+      Get.find<SharedPreferencesService>();
 
   // Observables
   final isLoading = false.obs;
@@ -62,7 +64,6 @@ class ProfileController extends GetxController {
 
         // Update shared preferences with latest user data
         await _updateSharedPreferences();
-
         _logSuccess('Complete profile data loaded successfully');
       } else {
         _setError(response.message!);
@@ -151,10 +152,7 @@ class ProfileController extends GetxController {
     // Validation
     final validationError = _validateProfileInputs(name, phone, place, address);
     if (validationError != null) {
-      AppSnackBar.show(
-        title: 'Validation Error',
-        message: validationError,
-      );
+      AppSnackBar.show(title: 'Validation Error', message: validationError);
       return false;
     }
 
@@ -197,7 +195,8 @@ class ProfileController extends GetxController {
         _logSuccess('Profile updated successfully');
         return true;
       } else {
-        profileUpdateMessage.value = response.message ?? 'Failed to update profile';
+        profileUpdateMessage.value =
+            response.message ?? 'Failed to update profile';
         AppSnackBar.show(
           title: 'Profile Update Error',
           message: profileUpdateMessage.value,
@@ -206,11 +205,9 @@ class ProfileController extends GetxController {
         return false;
       }
     } catch (e) {
-      profileUpdateMessage.value = 'An unexpected error occurred while updating profile';
-      AppSnackBar.show(
-        title: 'Error',
-        message: profileUpdateMessage.value,
-      );
+      profileUpdateMessage.value =
+          'An unexpected error occurred while updating profile';
+      AppSnackBar.show(title: 'Error', message: profileUpdateMessage.value);
       _setError(profileUpdateMessage.value);
       _logError('Update Profile Error', e.toString());
       return false;
@@ -220,7 +217,12 @@ class ProfileController extends GetxController {
   }
 
   /// Validate profile input data
-  String? _validateProfileInputs(String name, String phone, String place, String address) {
+  String? _validateProfileInputs(
+    String name,
+    String phone,
+    String place,
+    String address,
+  ) {
     if (name.trim().isEmpty) {
       return 'Name cannot be empty';
     }
@@ -262,8 +264,7 @@ class ProfileController extends GetxController {
   }) {
     if (user.value == null) return true;
 
-    return user.value!.name != name.trim() ||
-        user.value!.phone != phone.trim();
+    return user.value!.name != name.trim() || user.value!.phone != phone.trim();
     // Add other field comparisons if available in User model
   }
 
@@ -337,7 +338,8 @@ class ProfileController extends GetxController {
         );
         return true;
       } else {
-        passwordResetMessage.value = response.message ?? 'Failed to reset password';
+        passwordResetMessage.value =
+            response.message ?? 'Failed to reset password';
         AppSnackBar.show(
           title: 'Password Reset Error',
           message: passwordResetMessage.value,
@@ -346,10 +348,7 @@ class ProfileController extends GetxController {
       }
     } catch (e) {
       passwordResetMessage.value = 'An unexpected error occurred';
-      AppSnackBar.show(
-        title: 'Error',
-        message: passwordResetMessage.value,
-      );
+      AppSnackBar.show(title: 'Error', message: passwordResetMessage.value);
       return false;
     } finally {
       isResettingPassword.value = false;

@@ -38,5 +38,6 @@ class InitialBinding extends Bindings {
     Get.lazyPut<CreditHistoryController>(() => CreditHistoryController());
     Get.lazyPut<CartController>(() => CartController());
     Get.lazyPut<OrderController>(() => OrderController());
+    // Get.lazyPut<categoryServices>(() => categoryServices());  
   }
 }

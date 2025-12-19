@@ -151,7 +151,7 @@ class _SingleBillViewUIState extends State<SingleBillViewUI> {
                   'FAMILY MART',
                   style: TextStyle(
                     fontFamily: 'Roboto',
-                    fontSize: 22,
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

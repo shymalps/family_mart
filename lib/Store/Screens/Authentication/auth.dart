@@ -1,4 +1,11 @@
+import 'package:family_mart/Store/Controller/category_controller.dart';
+import 'package:family_mart/Store/Controller/product_list_controller.dart';
+import 'package:family_mart/Store/Controller/profile_controller.dart';
 import 'package:family_mart/Store/Extras/image_urls.dart';
+import 'package:family_mart/Store/Screens/Category/category_page.dart';
+import 'package:family_mart/Store/Screens/Dashboard/dashboard_screen.dart';
+import 'package:family_mart/Store/Screens/Grocery%20Home/HomePage/grocery_home_page.dart';
+import 'package:family_mart/Store/services/category_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +19,9 @@ import '../Navigation/bottom_navigation.dart';
 
 class AuthPage extends StatelessWidget {
   final AuthController authController = Get.put(AuthController());
+  final _formKey = GlobalKey<FormState>();
+  final productController = Get.put(ProductController());
+  // final CategoryService = Get.put(CategoryServices());
 
   AuthPage({super.key});
 
@@ -54,21 +64,14 @@ class AuthPage extends StatelessWidget {
         Container(
           height: 150,
           width: 150,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
-          ),
-          child: Image.asset(
-            ImageUrls.logo,
-            fit: BoxFit.cover,
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
+          child: Image.asset(ImageUrls.logo, fit: BoxFit.cover),
         ),
         const SizedBox(height: 20),
         const SizedBox(height: 8),
         Text(
           'Fresh groceries delivered to your door',
-          style: AppTextStyles.body2.copyWith(
-            color: AppColors.grey,
-          ),
+          style: AppTextStyles.body2.copyWith(color: AppColors.grey),
         ),
       ],
     );
@@ -91,7 +94,14 @@ class AuthPage extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            _buildAuthToggle(),
+            const SizedBox(height: 10),
+            Text(
+              'Login',
+              style: AppTextStyles.heading2.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 30),
             _buildAuthForm(),
             const SizedBox(height: 24),
@@ -102,163 +112,65 @@ class AuthPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAuthToggle() {
-    return Obx(() => Container(
-          decoration: BoxDecoration(
-            color: AppColors.lightGrey.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    if (!authController.isLogin.value) {
-                      authController.toggleAuthMode();
-                    }
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
-                      color: authController.isLogin.value
-                          ? AppColors.primary
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: authController.isLogin.value
-                          ? [
-                              BoxShadow(
-                                color: AppColors.primary.withOpacity(0.3),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ]
-                          : [],
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Login',
-                        style: AppTextStyles.body1.copyWith(
-                          color: authController.isLogin.value
-                              ? AppColors.white
-                              : AppColors.grey,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    if (authController.isLogin.value) {
-                      authController.toggleAuthMode();
-                    }
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
-                      color: !authController.isLogin.value
-                          ? AppColors.primary
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: !authController.isLogin.value
-                          ? [
-                              BoxShadow(
-                                color: AppColors.primary.withOpacity(0.3),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ]
-                          : [],
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Register',
-                        style: AppTextStyles.body1.copyWith(
-                          color: !authController.isLogin.value
-                              ? AppColors.white
-                              : AppColors.grey,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ));
-  }
-
   Widget _buildAuthForm() {
-    return Obx(() => Column(
-          children: [
-            if (!authController.isLogin.value) ...[
-              _buildTextField(
-                controller: authController.nameController,
-                label: 'Full Name',
-                icon: Icons.person_outline,
-                keyboardType: TextInputType.name,
-              ),
-              const SizedBox(height: 16),
-              _buildTextField(
-                controller: authController.phoneController,
-                label: 'Phone Number',
-                icon: Icons.phone_outlined,
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(height: 16),
-            ],
-            _buildTextField(
-              controller: authController.emailController,
-              label: 'Email',
-              icon: Icons.email_outlined,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 16),
-            _buildTextField(
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          _buildTextField(
+            controller: authController.usernameController,
+            label: 'Username',
+            icon: Icons.person_2,
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your username';
+              }
+              if (value.length < 3) {
+                return 'Username must be at least 3 characters';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16),
+          Obx(
+            () => _buildTextField(
               controller: authController.passwordController,
               label: 'Password',
               icon: Icons.lock_outline,
               isPassword: true,
               obscureText: authController.obscurePassword.value,
               onToggleVisibility: authController.togglePasswordVisibility,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your password';
+                }
+                if (value.length < 4) {
+                  return 'Password must be at least 4 characters';
+                }
+                return null;
+              },
             ),
-            if (!authController.isLogin.value) ...[
-              const SizedBox(height: 16),
-              _buildTextField(
-                controller: authController.confirmPasswordController,
-                label: 'Confirm Password',
-                icon: Icons.lock_outline,
-                isPassword: true,
-                obscureText: authController.obscureConfirmPassword.value,
-                onToggleVisibility:
-                    authController.toggleConfirmPasswordVisibility,
-              ),
-            ],
-            if (authController.isLogin.value) ...[
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  onTap: () {
-                    // Handle forgot password
-                  },
-                  child: Text(
-                    'Forgot Password?',
-                    style: AppTextStyles.body2.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ],
-        ));
+          ),
+          // const SizedBox(height: 16),
+          // Align(
+          //   alignment: Alignment.centerRight,
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       // Handle forgot password
+          //     },
+          //     child: Text(
+          //       'Forgot Password?',
+          //       style: AppTextStyles.body2.copyWith(
+          //         color: AppColors.primary,
+          //         fontWeight: FontWeight.w600,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+        ],
+      ),
+    );
   }
 
   Widget _buildTextField({
@@ -269,20 +181,20 @@ class AuthPage extends StatelessWidget {
     bool obscureText = false,
     VoidCallback? onToggleVisibility,
     TextInputType? keyboardType,
+    String? Function(String?)? validator,
   }) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.lightGrey.withOpacity(0.1),
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: AppColors.lightGrey.withOpacity(0.3),
-        ),
+        border: Border.all(color: AppColors.lightGrey.withOpacity(0.3)),
       ),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,
         style: AppTextStyles.body2,
+        validator: validator,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: AppTextStyles.body2.copyWith(color: AppColors.grey),
@@ -298,58 +210,63 @@ class AuthPage extends StatelessWidget {
               : null,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(16),
+          errorStyle: AppTextStyles.caption.copyWith(color: Colors.red),
         ),
       ),
     );
   }
 
   Widget _buildAuthButton() {
-    return Obx(() => Container(
-          width: double.infinity,
-          height: 50,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [AppColors.primary, AppColors.primaryDark],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withOpacity(0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
+    return Obx(
+      () => Container(
+        width: double.infinity,
+        height: 50,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppColors.primary, AppColors.primaryDark],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          child: ElevatedButton(
-            onPressed: authController.isLoading.value
-                ? null
-                : authController.authenticate,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withOpacity(0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
             ),
-            child: authController.isLoading.value
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: SmallLoadingSpinner(
-                      colors: [AppColors.white],
-                    ),
-                  )
-                : Text(
-                    authController.isLogin.value ? 'Login' : 'Register',
-                    style: AppTextStyles.body1.copyWith(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed: authController.isLoading.value
+              ? null
+              : () {
+                  if (_formKey.currentState!.validate()) {
+                    authController.authenticate();
+                  }
+                },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+          child: authController.isLoading.value
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: SmallLoadingSpinner(colors: [AppColors.white]),
+                )
+              : Text(
+                  'Login',
+                  style: AppTextStyles.body1.copyWith(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-          ),
-        ));
+                ),
+        ),
+      ),
+    );
   }
 
   Widget _buildSocialLogin() {
@@ -381,53 +298,46 @@ class AuthPage extends StatelessWidget {
         const SizedBox(height: 20),
         Container(
           width: double.infinity,
-          color: AppColors.white, // Container background
+          color: AppColors.white,
           child: Material(
-            // color: Colors.red, // Forces white behind the button
-            child: OutlinedButton(
-              onPressed: () async {
-                // Show loading indicator
-                authController.isLoading1.value = true;
+            child: Obx(
+              () => OutlinedButton(
+                onPressed: authController.isLoading1.value
+                    ? null
+                    : () async {
+                        authController.isLoading1.value = true;
+                        Get.put(ProductController());
+                        // Get.put(CategoryController());
+                        // Get.put(ProfileController());
+                        await Future.delayed(const Duration(seconds: 1));
 
-                await Future.delayed(const Duration(seconds: 2));
+                        authController.isLoading1.value = false;
+                        Get.off(() => GroceryHomePage());
 
-                authController.isLoading1.value = false;
-
-                // Navigate after loading
-                Get.toNamed(RouteName.navbar);
-              },
-              style: OutlinedButton.styleFrom(
-                backgroundColor: Colors.white,
-                // Button background
-                foregroundColor: AppColors.primary,
-                // Text and ripple
-                side: const BorderSide(color: AppColors.primary),
-                // Border
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                        print("Continue without login");
+                      },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  side: const BorderSide(color: AppColors.primary),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                elevation: 0,
-              ).copyWith(
-                overlayColor: WidgetStateProperty.all(
-                  AppColors.primary.withOpacity(0.1), // Light ripple effect
-                ),
+                child: authController.isLoading1.value
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: SmallLoadingSpinner(colors: [AppColors.primary]),
+                      )
+                    : Text(
+                        'Continue without login',
+                        style: AppTextStyles.body1.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
               ),
-              child: Obx(() => authController.isLoading1.value
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: SmallLoadingSpinner(
-                        colors: [AppColors.primary],
-                      ),
-                    )
-                  : Text(
-                      'Continue without login',
-                      style: AppTextStyles.body1.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    )),
             ),
           ),
         ),

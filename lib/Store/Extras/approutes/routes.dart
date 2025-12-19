@@ -4,12 +4,14 @@ import 'package:family_mart/Store/Screens/Category/category_page.dart';
 import 'package:family_mart/Store/Screens/Dashboard/credit_screen.dart';
 import 'package:family_mart/Store/Screens/Dashboard/dues.dart';
 import 'package:family_mart/Store/Screens/Dashboard/ledger.dart';
+import 'package:family_mart/Store/Screens/Grocery%20Home/HomePage/grocery_home_page.dart';
 import 'package:family_mart/Store/Screens/Grocery%20Product%20Description/description_page.dart';
 import 'package:family_mart/Store/Screens/Notifications/notifications.dart';
 import 'package:family_mart/Store/Screens/Splash%20Screen/splash_screen.dart';
 import 'package:family_mart/Store/Screens/settings/reset_password.dart';
 import 'package:family_mart/Store/Screens/settings/settings.dart';
 import 'package:family_mart/Store/orders/orders_screen.dart';
+import 'package:get/state_manager.dart';
 import '../../Bindings/homescreenbinding.dart';
 import '../../Screens/Authentication/auth.dart';
 import '../../Screens/Authentication/otp.dart';
@@ -45,5 +47,6 @@ class AppRoutes {
     getPage(RouteName.changepassword, const ChangePasswordPage(), []),
     getPage(RouteName.creditHistory, const CreditHistoryPage(), []),
     getPage(RouteName.orders, const OrdersScreen(), []),
+    getPage(RouteName.GroceryHomePage,  GroceryHomePage(), []),
   ];
 }

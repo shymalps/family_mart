@@ -9,13 +9,14 @@ import '../services/login_service.dart';
 import '../services/shared_pref.dart';
 
 class AuthController extends GetxController {
+  final formKey = GlobalKey<FormState>();
   final isLogin = true.obs;
   final isLoading = false.obs;
   final isLoading1 = false.obs;
   final obscurePassword = true.obs;
   final obscureConfirmPassword = true.obs;
 
-  final emailController = TextEditingController();
+  final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final nameController = TextEditingController();
@@ -28,7 +29,12 @@ class AuthController extends GetxController {
     isLogin.value = !isLogin.value;
     clearControllers();
   }
-
+ @override
+  void onInit() {
+    super.onInit();
+    
+    clearControllers();
+  }
   void togglePasswordVisibility() {
     obscurePassword.value = !obscurePassword.value;
   }
@@ -38,11 +44,11 @@ class AuthController extends GetxController {
   }
 
   void clearControllers() {
-    emailController.clear();
+    usernameController.clear();
     passwordController.clear();
-    confirmPasswordController.clear();
-    nameController.clear();
-    phoneController.clear();
+    // confirmPasswordController.clear();
+    // nameController.clear();
+    // phoneController.clear();
   }
 
   Future<void> authenticate() async {
@@ -51,7 +57,8 @@ class AuthController extends GetxController {
     if (isLogin.value) {
       // Perform login
       final response = await _loginService.login(
-          emailController.text.trim(), passwordController.text.trim());
+          usernameController.text.trim(),
+          passwordController.text.trim());
 
       if (response.success && response.data != null) {
         final LoginModel user = response.data!;
@@ -93,15 +100,50 @@ class AuthController extends GetxController {
 
     isLoading.value = false;
   }
+  Future<void> validationform () async {
+  if (!formKey.currentState!.validate()) {
+    return;
+  }
+
+  isLoading.value = true;
+
+  final response = await _loginService.login(
+    usernameController.text.trim(),
+    passwordController.text.trim(),
+  );
+
+  isLoading.value = false;
+
+  if (response.success && response.data != null) {
+    Get.toNamed(RouteName.otp, arguments: {
+      'currentPassword': passwordController.text.trim(),
+      'usertype': response.data!.userType,
+      'phone': response.data!.phone,
+      'userData': response.data!,
+    });
+  } else {
+    AppSnackBar.show(
+      title: 'Login Failed',
+      message: response.message ?? 'Invalid credentials',
+    );
+  }
+}
+
 
   @override
   void onClose() {
     clearControllers();
-    emailController.dispose();
+    usernameController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
     nameController.dispose();
     phoneController.dispose();
     super.onClose();
   }
+  void logout() {
+  clearControllers();
+  Get.delete<AuthController>();
+  Get.offAllNamed(RouteName.login);
+}
+
 }

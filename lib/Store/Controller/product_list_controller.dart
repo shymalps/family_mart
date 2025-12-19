@@ -1,3 +1,6 @@
+import 'package:family_mart/Store/services/category_services.dart';
+import 'package:family_mart/Store/services/profile_service.dart';
+import 'package:family_mart/Store/services/update_profile_service.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
 import '../Extras/urls.dart';
@@ -9,6 +12,9 @@ enum ProductFetchType { all, category, shop }
 class ProductController extends GetxController {
   // Service instance
   late ProductService _productService;
+  final categoryServices = Get.put(CategoryService());
+  final profileService = Get.put(ProfileService());
+  final profileserviceUpdate= Get.put(ProfileServiceUpdate());
 
   // Observable variables
   final RxList<Product> _products = <Product>[].obs;
@@ -50,9 +56,7 @@ class ProductController extends GetxController {
   }
 
   void _initializeService() {
-    _productService = ProductService(
-      baseURL: Constants.baseURL,
-    );
+    _productService = ProductService(baseURL: Constants.baseURL);
   }
 
   /// Generic method to fetch products based on type
@@ -104,13 +108,17 @@ class ProductController extends GetxController {
             userId: _userId,
             offset: _currentOffset.value,
             limit: _fixedLimit,
-            shopId: _selectedShopId.value.isEmpty ? null : _selectedShopId.value,
+            shopId: _selectedShopId.value.isEmpty
+                ? null
+                : _selectedShopId.value,
           );
           break;
       }
 
       if (response.success && response.data != null) {
-        final productListResponse = ProductListResponse.fromJson(response.data!);
+        final productListResponse = ProductListResponse.fromJson(
+          response.data!,
+        );
 
         if (productListResponse.status == 'success') {
           final newProducts = productListResponse.data;
@@ -158,10 +166,7 @@ class ProductController extends GetxController {
   }
 
   /// Fetches all products with pagination
-  Future<void> fetchProducts({
-    bool isRefresh = false,
-    String? shopId,
-  }) async {
+  Future<void> fetchProducts({bool isRefresh = false, String? shopId}) async {
     await _fetchProductsGeneric(
       isRefresh: isRefresh,
       shopId: shopId,
@@ -226,7 +231,9 @@ class ProductController extends GetxController {
       );
 
       if (response.success && response.data != null) {
-        final productListResponse = ProductListResponse.fromJson(response.data!);
+        final productListResponse = ProductListResponse.fromJson(
+          response.data!,
+        );
 
         if (productListResponse.status == 'success' ||
             productListResponse.status == '1') {
@@ -263,10 +270,7 @@ class ProductController extends GetxController {
         );
         break;
       case ProductFetchType.shop:
-        await fetchProducts(
-          isRefresh: true,
-          shopId: _selectedShopId.value,
-        );
+        await fetchProducts(isRefresh: true, shopId: _selectedShopId.value);
         break;
       case ProductFetchType.all:
       default:
@@ -324,8 +328,9 @@ class ProductController extends GetxController {
 
   /// Updates cart count for a specific product
   void updateProductCartCount(int productId, int newCount) {
-    final productIndex =
-    _products.indexWhere((product) => product.id == productId);
+    final productIndex = _products.indexWhere(
+      (product) => product.id == productId,
+    );
     if (productIndex != -1) {
       final updatedProduct = Product(
         id: _products[productIndex].id,
@@ -342,8 +347,9 @@ class ProductController extends GetxController {
 
       _products[productIndex] = updatedProduct;
 
-      final filteredIndex =
-      _filteredProducts.indexWhere((product) => product.id == productId);
+      final filteredIndex = _filteredProducts.indexWhere(
+        (product) => product.id == productId,
+      );
       if (filteredIndex != -1) {
         _filteredProducts[filteredIndex] = updatedProduct;
       }

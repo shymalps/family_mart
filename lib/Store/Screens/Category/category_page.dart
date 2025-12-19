@@ -6,23 +6,20 @@ import '../../Extras/animated_wrapper.dart';
 import '../../Extras/approutes/route_name.dart';
 import '../../Extras/styles.dart';
 
-
 class CategoryPage extends StatelessWidget {
   const CategoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     // Get the CategoryController instance
-    final CategoryController categoryController = Get.find<CategoryController>();
+    final CategoryController categoryController =
+        Get.find<CategoryController>();
 
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              AppColors.bgColor,
-              AppColors.white,
-            ],
+            colors: [AppColors.bgColor, AppColors.white],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             stops: [0.1, 0.5],
@@ -44,7 +41,9 @@ class CategoryPage extends StatelessWidget {
                       if (categoryController.isLoading.value) {
                         return const Center(
                           child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.primary,
+                            ),
                           ),
                         );
                       }
@@ -68,7 +67,8 @@ class CategoryPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 16),
                               ElevatedButton(
-                                onPressed: () => categoryController.fetchCategories(),
+                                onPressed: () =>
+                                    categoryController.fetchCategories(),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primary,
                                   foregroundColor: AppColors.white,
@@ -103,17 +103,22 @@ class CategoryPage extends StatelessWidget {
                       }
 
                       return GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 1.5, // Adjusted for text-only cards
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                              childAspectRatio:
+                                  1.5, // Adjusted for text-only cards
+                            ),
                         itemCount: categoryController.categories.length,
                         itemBuilder: (context, index) {
                           final category = categoryController.categories[index];
                           // Create a gradient color based on the category name
-                          final gradientColors = _getCategoryGradient(category.name, index);
+                          final gradientColors = _getCategoryGradient(
+                            category.name,
+                            index,
+                          );
 
                           return Container(
                             decoration: BoxDecoration(
@@ -138,14 +143,22 @@ class CategoryPage extends StatelessWidget {
                                 onTap: () {
                                   // Handle category tap
                                   print('Tapped on ${category.name}');
-                                  Get.toNamed(RouteName.productsBasedOnCategory, arguments: {
-                                    'id': category.id,
-                                    'name': category.name.toString(),
-                                    'icon': Icons.eco_rounded,
-                                  });
+                                  Get.toNamed(
+                                    RouteName.productsBasedOnCategory,
+                                    arguments: {
+                                      'id': category.id,
+                                      'name': category.name.toString(),
+                                      'icon': Icons.eco_rounded,
+                                    },
+                                  );
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.all(16),
+                                  padding: const EdgeInsets.only(
+                                    left: 20,
+                                    right: 20,
+                                    top: 20,
+                                    bottom: 6,
+                                  ),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -154,10 +167,16 @@ class CategoryPage extends StatelessWidget {
                                         width: 50,
                                         height: 50,
                                         decoration: BoxDecoration(
-                                          color: AppColors.white.withOpacity(0.3),
-                                          borderRadius: BorderRadius.circular(25),
+                                          color: AppColors.white.withOpacity(
+                                            0.3,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            25,
+                                          ),
                                           border: Border.all(
-                                            color: AppColors.white.withOpacity(0.5),
+                                            color: AppColors.white.withOpacity(
+                                              0.5,
+                                            ),
                                             width: 2,
                                           ),
                                         ),
@@ -166,10 +185,11 @@ class CategoryPage extends StatelessWidget {
                                             category.name.isNotEmpty
                                                 ? category.name[0].toUpperCase()
                                                 : '?',
-                                            style: AppTextStyles.heading2.copyWith(
-                                              color: AppColors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            style: AppTextStyles.heading2
+                                                .copyWith(
+                                                  color: AppColors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                         ),
                                       ),
@@ -182,23 +202,29 @@ class CategoryPage extends StatelessWidget {
                                           fontWeight: FontWeight.w600,
                                         ),
                                         textAlign: TextAlign.center,
-                                        maxLines: 2,
+                                        maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(height: 4),
                                       // Decorative dots
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: List.generate(3, (dotIndex) =>
-                                            Container(
-                                              margin: const EdgeInsets.symmetric(horizontal: 2),
-                                              width: 4,
-                                              height: 4,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.white.withOpacity(0.6),
-                                                borderRadius: BorderRadius.circular(2),
-                                              ),
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: List.generate(
+                                          3,
+                                          (dotIndex) => Container(
+                                            margin: const EdgeInsets.symmetric(
+                                              horizontal: 2,
                                             ),
+                                            width: 4,
+                                            height: 4,
+                                            decoration: BoxDecoration(
+                                              color: AppColors.white
+                                                  .withOpacity(0.6),
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -221,39 +247,41 @@ class CategoryPage extends StatelessWidget {
   }
 
   Widget _buildTopBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical:8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+    return AppBar(
+      automaticallyImplyLeading: true,
+      backgroundColor: Colors.white,
+      elevation: 0,
+      // leading: IconButton(
+      //   icon: const Icon(Icons.arrow_back_ios, color: AppColors.grey),
+      //   onPressed: () {
+      //     Get.back();
+      //   },
+      // ),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Categories',
-                style: AppTextStyles.heading1,
+          Text('Categories', style: AppTextStyles.heading1),
+          const SizedBox(height: 4),
+          Container(
+            height: 3,
+            width: 80,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.primary, AppColors.primary.withOpacity(0.3)],
               ),
-              Container(
-                height: 3,
-                width: 80,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppColors.primary, AppColors.primary.withOpacity(0.3)],
-                  ),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ],
-          ),
-          const Spacer(),
-          IconButton(
-            onPressed: () {
-              Get.toNamed(RouteName.notifications);
-            },
-            icon: const Icon(Icons.notifications_outlined, color: AppColors.grey),
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
         ],
       ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Get.toNamed(RouteName.notifications);
+          },
+          icon: const Icon(Icons.notifications_outlined, color: AppColors.grey),
+        ),
+      ],
     );
   }
 

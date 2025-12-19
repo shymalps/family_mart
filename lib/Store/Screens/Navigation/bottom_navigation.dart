@@ -68,7 +68,7 @@ class MainNavigationPageState extends State<MainNavigationPage> {
         return BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor: AppColors.white,
-          selectedItemColor: AppColors.primary,
+          selectedItemColor: AppColors.success,
           unselectedItemColor: AppColors.grey,
           selectedLabelStyle: AppTextStyles.caption,
           unselectedLabelStyle: AppTextStyles.caption,

@@ -22,4 +22,5 @@ class RouteName {
   static const String changepassword = '/changepassword';
   static const String creditHistory = '/creditHistory';
   static const String orders = '/orders';
+  static const String GroceryHomePage = '/GroceryHomePage';
 }

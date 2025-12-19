@@ -33,6 +33,7 @@ class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
     _fetchProductDescription();
   }
 
+
   void _fetchProductDescription() {
     if (product.id != null) {
       controller.fetchProductDescription(product.id);
@@ -79,7 +80,7 @@ class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
                                 _buildProductImages(),
                                 _buildProductDetails(),
                                 _buildNutritionInfo(),
-                                _buildRelatedProducts(),
+                                _buildRelatedProducts(MediaQuery.of(context)),
                                 const SizedBox(height: 100),
                                 // Space for bottom bar
                               ],
@@ -849,7 +850,7 @@ class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
     );
   }
 
-  Widget _buildRelatedProducts() {
+  Widget _buildRelatedProducts(dynamic mediaQuery) {
     return AnimatedWrapper(
       index: 5,
       child: Container(
@@ -874,7 +875,7 @@ class _ProductDescriptionPageState extends State<ProductDescriptionPage> {
             ),
             const SizedBox(height: 12),
             SizedBox(
-              height: 200,
+              height: mediaQuery.size.height * 0.25,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
